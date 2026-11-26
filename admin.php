@@ -49,12 +49,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['logout']) && $csrfOk(
 }
 $isAdmin = !empty($_SESSION['admin']);
 
-// "Send test email": sends one mail to the office address and shows the exact SMTP result.
-$mailTest = null;
-if ($isAdmin && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['test_mail']) && $csrfOk()) {
-    $ok = send_mail(EMAIL, 'Test email — ' . SITE_NAME . ' website', "This is a test email from the admin panel of " . SITE_URL . ".\n\nIf you can read this, form confirmation emails are working.\n\nSent at " . date('d M Y, h:i A'));
-    $mailTest = $ok ? ['ok', 'Test email sent to ' . EMAIL . '. Check the inbox (and Spam folder).'] : ['err', 'Email failed: ' . $SMTP_ERROR];
-}
 
 // Settings box: test a new database / email password and, only if it works, write it into includes/secrets.php.
 $settingsMsg = [];
@@ -186,7 +180,6 @@ $today = count(array_filter($rows, fn($r) => str_starts_with($r['created_at'] ??
     <form method="post" action="admin.php"><input type="hidden" name="csrf" value="<?= e($_SESSION['csrf']) ?>"><button name="logout" value="1">Log out</button></form>
   </div></div>
   <div class="wrap">
-    <?php if ($mailTest): ?><div class="alert <?= $mailTest[0] ?>" role="status" style="margin-top:24px"><?= e($mailTest[1]) ?></div><?php endif; ?>
     <?php foreach ($settingsMsg as [$type, $text]): ?><div class="alert <?= $type === 'ok' ? 'ok' : 'err' ?>" role="status" style="margin-top:16px"><?= e($text) ?></div><?php endforeach; ?>
     <details class="settings"<?= db() ? '' : ' open' ?>>
       <summary>⚙ Settings — database &amp; email passwords</summary>
@@ -219,9 +212,7 @@ $today = count(array_filter($rows, fn($r) => str_starts_with($r['created_at'] ??
       </nav>
       <div style="display:flex;gap:10px;flex-wrap:wrap">
         <input type="search" id="q" placeholder="Search name, mobile, city…" aria-label="Search leads">
-        <a class="btn btn-accent btn-sm" href="admin.php?export=1<?= $kind ? '&kind=' . $kind : '' ?>">Download Excel (CSV)</a>
-        <form method="post" action="admin.php" style="display:inline"><input type="hidden" name="csrf" value="<?= e($_SESSION['csrf']) ?>"><button class="btn btn-outline btn-sm" name="test_mail" value="1">Send test email</button></form>
-      </div>
+        <a class="btn btn-accent btn-sm" href="admin.php?export=1<?= $kind ? '&kind=' . $kind : '' ?>">Download Excel (CSV)</a>      </div>
     </div>
     <div class="tbl">
       <?php if (!$rows): ?><div class="empty">No entries yet.</div><?php else: ?>
