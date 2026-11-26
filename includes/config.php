@@ -2,7 +2,13 @@
 // Edit company details here — every page reads from this file.
 date_default_timezone_set('Asia/Kolkata');
 // Database, email (SMTP) and admin login live in secrets.php (server only, never in git). See secrets.example.php.
-if (is_file(__DIR__ . '/secrets.php')) require_once __DIR__ . '/secrets.php';
+// A typo in secrets.php must never take the whole site down: the error is caught and only its line number is kept
+// (the message itself could contain part of a password).
+$SECRETS_ERROR = null;
+if (is_file(__DIR__ . '/secrets.php')) {
+    try { require_once __DIR__ . '/secrets.php'; }
+    catch (Throwable $e) { $SECRETS_ERROR = 'line ' . $e->getLine(); error_log('Ensoar secrets.php error on ' . $SECRETS_ERROR); }
+}
 const SITE_URL    = 'https://ensoar.in'; // no trailing slash
 const SITE_NAME   = 'Ensoar Pvt. Ltd.';
 const SITE_SHORT  = 'Ensoar';

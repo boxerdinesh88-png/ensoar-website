@@ -111,7 +111,11 @@ $today = count(array_filter($rows, fn($r) => str_starts_with($r['created_at'] ??
       <img src="img/logo.png" alt="<?= SITE_NAME ?>">
       <h1 style="font-size:1.5rem;margin-bottom:18px">Admin login</h1>
       <?php if (!$configured): ?>
-        <div class="alert err">Admin is not set up yet. Add ADMIN_PASS (10+ characters) in includes/secrets.php on the server.</div>
+        <?php if ($SECRETS_ERROR): ?>
+          <div class="alert err">includes/secrets.php has a typo on <?= e($SECRETS_ERROR) ?> (check the quotes ' ' and the ; at the end of each line). The website keeps working meanwhile.</div>
+        <?php else: ?>
+          <div class="alert err">Admin is not set up yet. Add ADMIN_PASS (10+ characters) in includes/secrets.php on the server.</div>
+        <?php endif; ?>
       <?php else: ?>
         <?php if ($error): ?><div class="alert err" role="alert"><?= e($error) ?></div><?php endif; ?>
         <input type="hidden" name="csrf" value="<?= e($_SESSION['csrf']) ?>">
