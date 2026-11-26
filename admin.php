@@ -56,6 +56,47 @@ if ($isAdmin && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['test_mail
     $mailTest = $ok ? ['ok', 'Test email sent to ' . EMAIL . '. Check the inbox (and Spam folder).'] : ['err', 'Email failed: ' . $SMTP_ERROR];
 }
 
+// Settings box: test a new database / email password and, only if it works, write it into includes/secrets.php.
+$settingsMsg = [];
+if ($isAdmin && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_settings']) && $csrfOk()) {
+    $vals = [];
+    foreach (['DB_HOST', 'DB_NAME', 'DB_USER', 'DB_PASS', 'SMTP_HOST', 'SMTP_PORT', 'SMTP_USER', 'SMTP_PASS', 'ADMIN_USER', 'ADMIN_PASS'] as $k) {
+        $vals[$k] = defined($k) ? constant($k) : '';
+    }
+    $newDb = (string)($_POST['db_pass'] ?? '');
+    $newMail = (string)($_POST['smtp_pass'] ?? '');
+    if ($newDb !== '') {
+        try {
+            new PDO('mysql:host=' . $vals['DB_HOST'] . ';dbname=' . $vals['DB_NAME'], $vals['DB_USER'], $newDb, [PDO::ATTR_TIMEOUT => 5, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+            $vals['DB_PASS'] = $newDb;
+            $settingsMsg[] = ['ok', 'Database password works — saved. Database connected.'];
+        } catch (Throwable $e) {
+            $settingsMsg[] = ['err', 'Database password NOT accepted (not saved). Copy it from InfinityFree → MySQL Databases → MYSQL PASSWORD (eye icon).'];
+        }
+    }
+    if ($newMail !== '') {
+        if (send_mail(EMAIL, 'Email setup successful — ' . SITE_NAME, "Your website can now send emails from " . SMTP_USER . ".\n\nForm confirmation emails are working.", '', $newMail)) {
+            $vals['SMTP_PASS'] = $newMail;
+            $settingsMsg[] = ['ok', 'Email password works — saved. A test email was sent to ' . EMAIL . '.'];
+        } else {
+            $settingsMsg[] = ['err', 'Email password NOT accepted (not saved): ' . $SMTP_ERROR . '. Use the password that logs in to mail.hostinger.com for ' . SMTP_USER . '.'];
+        }
+    }
+    if ($vals['DB_PASS'] !== (defined('DB_PASS') ? DB_PASS : '') || $vals['SMTP_PASS'] !== (defined('SMTP_PASS') ? SMTP_PASS : '')) {
+        $php = "<?php\n// Server-only settings, written by the admin Settings box. Never put this file on GitHub.\n";
+        foreach ($vals as $k => $v) $php .= "const $k = " . var_export($v, true) . ";\n";
+        if (@file_put_contents(__DIR__ . '/includes/secrets.php', $php, LOCK_EX) === false) {
+            $settingsMsg[] = ['err', 'Could not write includes/secrets.php (file permissions).'];
+        } else {
+            // reload so the new secrets.php is the one in use; messages travel in the session
+            $_SESSION['flash'] = $settingsMsg;
+            header('Location: admin.php', true, 303);
+            exit;
+        }
+    }
+}
+if ($isAdmin && !empty($_SESSION['flash'])) { $settingsMsg = $_SESSION['flash']; unset($_SESSION['flash']); }
+
 $cols = ['created_at' => 'Date', 'kind' => 'Type', 'name' => 'Name', 'phone' => 'Mobile', 'email' => 'Email', 'loan' => 'Loan / Partner type', 'city' => 'City', 'amount' => 'Amount', 'income' => 'Income', 'message' => 'Message'];
 $kind = in_array($_GET['kind'] ?? '', ['Loan', 'Partner'], true) ? $_GET['kind'] : '';
 $rows = $isAdmin ? load_leads() : [];
@@ -109,6 +150,10 @@ $today = count(array_filter($rows, fn($r) => str_starts_with($r['created_at'] ??
   .pill.p{background:rgba(11,46,102,.1);color:var(--navy)}
   .empty{padding:50px;text-align:center;color:var(--muted)}
   .note{color:var(--muted);font-size:.88rem}
+  .settings{background:#fff;border-radius:16px;box-shadow:var(--shadow);margin-top:24px;padding:0 22px}
+  .settings summary{cursor:pointer;padding:18px 0;font:700 1rem var(--ff-h);color:var(--navy-dk)}
+  .settings form{padding-bottom:20px}
+  .settings .pill{margin-left:6px}
   @media (max-width:640px){.kpis{grid-template-columns:1fr}.bar input{min-width:0;width:100%}}
 </style>
 </head>
@@ -142,6 +187,25 @@ $today = count(array_filter($rows, fn($r) => str_starts_with($r['created_at'] ??
   </div></div>
   <div class="wrap">
     <?php if ($mailTest): ?><div class="alert <?= $mailTest[0] ?>" role="status" style="margin-top:24px"><?= e($mailTest[1]) ?></div><?php endif; ?>
+    <?php foreach ($settingsMsg as [$type, $text]): ?><div class="alert <?= $type === 'ok' ? 'ok' : 'err' ?>" role="status" style="margin-top:16px"><?= e($text) ?></div><?php endforeach; ?>
+    <details class="settings"<?= db() ? '' : ' open' ?>>
+      <summary>⚙ Settings — database &amp; email passwords</summary>
+      <form method="post" action="admin.php" class="form-grid two" autocomplete="off">
+        <input type="hidden" name="csrf" value="<?= e($_SESSION['csrf']) ?>">
+        <div class="field">
+          <label for="db_pass">Database password <?= db() ? '<span class="pill">connected</span>' : '<span class="pill p">not connected</span>' ?></label>
+          <input id="db_pass" name="db_pass" type="password" autocomplete="new-password" placeholder="InfinityFree → MySQL Databases → MYSQL PASSWORD">
+        </div>
+        <div class="field">
+          <label for="smtp_pass">Email password for <?= e(defined('SMTP_USER') ? SMTP_USER : EMAIL) ?></label>
+          <input id="smtp_pass" name="smtp_pass" type="password" autocomplete="new-password" placeholder="Password that logs in to mail.hostinger.com">
+        </div>
+        <div class="field full">
+          <button class="btn btn-navy btn-sm" name="save_settings" value="1" type="submit" style="justify-content:center">Test &amp; Save</button>
+          <p class="form-note">Fill only the one you want to change. Each password is tested first and saved only if it works.</p>
+        </div>
+      </form>
+    </details>
     <div class="kpis">
       <div><b><?= count($rows) ?></b><small><?= $kind ?: 'All' ?> leads</small></div>
       <div><b><?= $today ?></b><small>Today</small></div>

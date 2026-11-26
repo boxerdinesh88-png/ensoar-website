@@ -5,10 +5,12 @@ require_once __DIR__ . '/config.php';
 
 $SMTP_ERROR = ''; // last failure reason, shown by the admin "Send test email" button (never contains the password)
 
-function send_mail(string $to, string $subject, string $body, string $replyTo = ''): bool {
+// $pass lets the admin Settings box test a new mailbox password before saving it.
+function send_mail(string $to, string $subject, string $body, string $replyTo = '', ?string $pass = null): bool {
     global $SMTP_ERROR;
     $SMTP_ERROR = '';
-    if (!defined('SMTP_PASS') || SMTP_PASS === '') { $SMTP_ERROR = 'SMTP_PASS is empty in includes/secrets.php'; return false; }
+    $pass ??= defined('SMTP_PASS') ? SMTP_PASS : '';
+    if ($pass === '' || !defined('SMTP_USER')) { $SMTP_ERROR = 'email password is not set'; return false; }
     if (!filter_var($to, FILTER_VALIDATE_EMAIL)) { $SMTP_ERROR = 'invalid recipient'; return false; }
     // Port 465 (SSL) first; if the host blocks it, fall back to 587 with STARTTLS.
     $startTls = false;
@@ -53,7 +55,7 @@ function send_mail(string $to, string $subject, string $body, string $replyTo = 
         }
         $cmd('AUTH LOGIN', 334);
         $cmd(base64_encode(SMTP_USER), 334);
-        try { $cmd(base64_encode(SMTP_PASS), 235); }
+        try { $cmd(base64_encode($pass), 235); }
         catch (RuntimeException $e) { throw new RuntimeException('login refused — check SMTP_PASS (mailbox password) for ' . SMTP_USER . ': ' . $e->getMessage()); }
         $cmd('MAIL FROM:<' . SMTP_USER . '>', 250);
         $cmd('RCPT TO:<' . $clean($to) . '>', 250);
