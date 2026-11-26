@@ -16,7 +16,7 @@ const PHONE       = '+91 96544 02358';
 const PHONE_RAW   = '919654402358';
 const EMAIL       = 'info@ensoar.in';
 const OFFICE_ADDR = '2nd Floor, S-4, Aditya City Center, Vaibhav Khand, Indirapuram, Ghaziabad, Uttar Pradesh – 201014';
-const REG_ADDR    = 'A-3/704, Panchsheel Green-2, Greater Noida, Gautam Buddh Nagar, Uttar Pradesh – 201301';
+const REG_ADDR    = '39, Shivam Apartments, Rohini Sector-15, Delhi – 110089';
 const HOURS       = 'Mon – Sat, 9:30 AM – 7:00 PM';
 
 // Real photos from Unsplash (free licence), served full-quality from their CDN.
