@@ -1,6 +1,9 @@
 <?php
 // Edit company details here — every page reads from this file.
 date_default_timezone_set('Asia/Kolkata');
+// Database, email (SMTP) and admin login live in secrets.php (server only, never in git). See secrets.example.php.
+if (is_file(__DIR__ . '/secrets.php')) require_once __DIR__ . '/secrets.php';
+const SITE_URL    = 'https://ensoar.in'; // no trailing slash
 const SITE_NAME   = 'Ensoar Pvt. Ltd.';
 const SITE_SHORT  = 'Ensoar';
 const PHONE       = '+91 96544 02358';

@@ -1,1 +1,3 @@
-data/leads.csv
+data/*.csv
+data/*.json
+includes/secrets.php

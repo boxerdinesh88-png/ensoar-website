@@ -6,6 +6,7 @@ function lead_form(string $kind = 'loan', bool $compact = false): void { ?>
   <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
   <div class="field"><label for="n-<?= $kind . $compact ?>">Full Name *</label><input id="n-<?= $kind . $compact ?>" name="name" required maxlength="80" autocomplete="name" placeholder="Your name"></div>
   <div class="field"><label for="p-<?= $kind . $compact ?>">Mobile Number *</label><input id="p-<?= $kind . $compact ?>" name="phone" type="tel" required pattern="[6-9][0-9]{9}" maxlength="10" inputmode="numeric" autocomplete="tel-national" placeholder="10-digit mobile"></div>
+  <div class="field<?= $compact ? '' : ' full' ?>"><label for="e-<?= $kind . $compact ?>">Email *</label><input id="e-<?= $kind . $compact ?>" name="email" type="email" required maxlength="120" autocomplete="email" placeholder="you@example.com"></div>
   <?php if ($kind === 'partner'): ?>
     <div class="field"><label for="t-partner">I am a *</label><select id="t-partner" name="loan" required><option value="">Select</option><option>Car / Two-wheeler Dealer</option><option>Sub-DSA / Connector</option><option>Insurance / Finance Advisor</option><option>Other</option></select></div>
   <?php else: ?>

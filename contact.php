@@ -19,7 +19,7 @@ page_hero('Contact &amp; Apply', 'Call, WhatsApp or drop in — or fill the form
       <div class="form-card reveal r" id="apply">
         <span class="eyebrow">Apply Online</span>
         <h2 style="font-size:1.8rem;margin-bottom:20px">Get your free loan quote</h2>
-        <?php if (isset($_GET['err'])): ?><div class="alert err">Please enter your name, a valid 10-digit mobile number, loan type and city.</div><?php endif; ?>
+        <?php if (isset($_GET['err'])): ?><div class="alert err">Please enter your name, a valid email, a valid 10-digit mobile number, loan type and city.</div><?php endif; ?>
         <?php if (isset($_GET['sent'])): ?><div class="alert ok">Thank you! Your enquiry has been received.</div><?php endif; ?>
         <?php lead_form('loan'); ?>
       </div>
