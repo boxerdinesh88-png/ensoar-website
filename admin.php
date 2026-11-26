@@ -1,6 +1,7 @@
 <?php
 // Private admin: log in, then view every form entry (loan + partner leads) and download them as CSV.
 require_once __DIR__ . '/includes/db.php';
+require_once __DIR__ . '/includes/mailer.php';
 
 session_set_cookie_params(['httponly' => true, 'samesite' => 'Strict', 'secure' => !empty($_SERVER['HTTPS'])]);
 session_start();
@@ -47,6 +48,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['logout']) && $csrfOk(
     exit;
 }
 $isAdmin = !empty($_SESSION['admin']);
+
+// "Send test email": sends one mail to the office address and shows the exact SMTP result.
+$mailTest = null;
+if ($isAdmin && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['test_mail']) && $csrfOk()) {
+    $ok = send_mail(EMAIL, 'Test email — ' . SITE_NAME . ' website', "This is a test email from the admin panel of " . SITE_URL . ".\n\nIf you can read this, form confirmation emails are working.\n\nSent at " . date('d M Y, h:i A'));
+    $mailTest = $ok ? ['ok', 'Test email sent to ' . EMAIL . '. Check the inbox (and Spam folder).'] : ['err', 'Email failed: ' . $SMTP_ERROR];
+}
 
 $cols = ['created_at' => 'Date', 'kind' => 'Type', 'name' => 'Name', 'phone' => 'Mobile', 'email' => 'Email', 'loan' => 'Loan / Partner type', 'city' => 'City', 'amount' => 'Amount', 'income' => 'Income', 'message' => 'Message'];
 $kind = in_array($_GET['kind'] ?? '', ['Loan', 'Partner'], true) ? $_GET['kind'] : '';
@@ -133,6 +141,7 @@ $today = count(array_filter($rows, fn($r) => str_starts_with($r['created_at'] ??
     <form method="post" action="admin.php"><input type="hidden" name="csrf" value="<?= e($_SESSION['csrf']) ?>"><button name="logout" value="1">Log out</button></form>
   </div></div>
   <div class="wrap">
+    <?php if ($mailTest): ?><div class="alert <?= $mailTest[0] ?>" role="status" style="margin-top:24px"><?= e($mailTest[1]) ?></div><?php endif; ?>
     <div class="kpis">
       <div><b><?= count($rows) ?></b><small><?= $kind ?: 'All' ?> leads</small></div>
       <div><b><?= $today ?></b><small>Today</small></div>
@@ -147,6 +156,7 @@ $today = count(array_filter($rows, fn($r) => str_starts_with($r['created_at'] ??
       <div style="display:flex;gap:10px;flex-wrap:wrap">
         <input type="search" id="q" placeholder="Search name, mobile, city…" aria-label="Search leads">
         <a class="btn btn-accent btn-sm" href="admin.php?export=1<?= $kind ? '&kind=' . $kind : '' ?>">Download Excel (CSV)</a>
+        <form method="post" action="admin.php" style="display:inline"><input type="hidden" name="csrf" value="<?= e($_SESSION['csrf']) ?>"><button class="btn btn-outline btn-sm" name="test_mail" value="1">Send test email</button></form>
       </div>
     </div>
     <div class="tbl">
