@@ -9,11 +9,13 @@
   // mobile menu
   const burger = $('#burger'), nav = $('#nav');
   const setMenu = open => {
+    if (open) document.documentElement.style.setProperty('--hdr', header.getBoundingClientRect().bottom + 'px');
     nav.classList.toggle('open', open);
     document.body.classList.toggle('menu-open', open);
     burger.setAttribute('aria-expanded', open);
     burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
-    document.body.style.overflow = open ? 'hidden' : '';
+    // lock scroll on <html>, not <body>: hidden overflow on body would break the sticky header
+    document.documentElement.style.overflow = open ? 'hidden' : '';
   };
   burger.addEventListener('click', () => setMenu(!nav.classList.contains('open')));
   // close on: tapping the dimmed page, choosing a link, or Esc

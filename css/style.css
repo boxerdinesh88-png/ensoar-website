@@ -289,9 +289,11 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
 
 /* responsive */
 @media (max-width:1080px){
-  .nav{position:fixed;inset:0 0 0 auto;width:min(340px,86vw);background:#fff;flex-direction:column;align-items:stretch;padding:100px 28px 28px;gap:4px;transform:translateX(100%);visibility:hidden;transition:transform .35s,visibility .35s;box-shadow:-20px 0 60px rgba(0,0,0,.15);z-index:-1;height:100vh}
+  /* no blur on mobile: backdrop-filter would make the fixed menu position against the header instead of the screen */
+  .site-header{backdrop-filter:none;background:#fff}
+  /* menu opens right under the header (--hdr is set by JS on open) and always fills the rest of the screen */
+  .nav{position:fixed;top:var(--hdr,84px);right:0;bottom:0;left:auto;width:min(340px,86vw);background:#fff;flex-direction:column;align-items:stretch;padding:16px 22px 28px;gap:2px;transform:translateX(100%);visibility:hidden;transition:transform .35s,visibility .35s;box-shadow:-20px 0 60px rgba(0,0,0,.15);z-index:1;overflow-y:auto;overscroll-behavior:contain;border-top:1px solid var(--line)}
   .nav.open{transform:none;visibility:visible}
-  .nav{height:100dvh;overflow-y:auto}
   body::before{content:"";position:fixed;inset:0;z-index:49;background:rgba(6,26,61,.55);backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .35s}
   body.menu-open::before{opacity:1;pointer-events:auto}
   body.menu-open .wa-float,body.menu-open .to-top{opacity:0;pointer-events:none}

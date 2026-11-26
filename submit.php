@@ -39,7 +39,7 @@ $wa = 'https://wa.me/' . PHONE_RAW . '?text=' . rawurlencode(implode("\n", $line
 <title>Thank you – <?= SITE_NAME ?></title>
 <link rel="icon" href="img/favicon.png">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=4">
+<link rel="stylesheet" href="css/style.css?v=5">
 </head><body>
 <section class="page-hero thanks">
   <div class="wrap">
