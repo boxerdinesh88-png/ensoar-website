@@ -8,11 +8,18 @@
 
   // mobile menu
   const burger = $('#burger'), nav = $('#nav');
-  burger.addEventListener('click', () => {
-    const open = nav.classList.toggle('open');
+  const setMenu = open => {
+    nav.classList.toggle('open', open);
+    document.body.classList.toggle('menu-open', open);
     burger.setAttribute('aria-expanded', open);
+    burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
     document.body.style.overflow = open ? 'hidden' : '';
-  });
+  };
+  burger.addEventListener('click', () => setMenu(!nav.classList.contains('open')));
+  // close on: tapping the dimmed page, choosing a link, or Esc
+  document.addEventListener('click', e => { if (nav.classList.contains('open') && !nav.contains(e.target) && !burger.contains(e.target)) setMenu(false); });
+  $$('a', nav).forEach(a => a.addEventListener('click', () => setMenu(false)));
+  addEventListener('keydown', e => { if (e.key === 'Escape' && nav.classList.contains('open')) { setMenu(false); burger.focus(); } });
 
   // scroll reveal (+ stagger children with data-stagger)
   $$('[data-stagger]').forEach(g => [...g.children].forEach((c, i) => { c.classList.add('reveal'); c.style.transitionDelay = i * 110 + 'ms'; }));

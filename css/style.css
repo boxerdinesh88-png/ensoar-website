@@ -291,7 +291,17 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
 @media (max-width:1080px){
   .nav{position:fixed;inset:0 0 0 auto;width:min(340px,86vw);background:#fff;flex-direction:column;align-items:stretch;padding:100px 28px 28px;gap:4px;transform:translateX(100%);visibility:hidden;transition:transform .35s,visibility .35s;box-shadow:-20px 0 60px rgba(0,0,0,.15);z-index:-1;height:100vh}
   .nav.open{transform:none;visibility:visible}
-  .nav a:not(.btn){padding:14px 6px;border-bottom:1px solid var(--line)}
+  .nav{height:100dvh;overflow-y:auto}
+  body::before{content:"";position:fixed;inset:0;z-index:49;background:rgba(6,26,61,.55);backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .35s}
+  body.menu-open::before{opacity:1;pointer-events:auto}
+  body.menu-open .wa-float,body.menu-open .to-top{opacity:0;pointer-events:none}
+  .nav a:not(.btn){padding:14px 16px;border-bottom:1px solid var(--line);border-left:3px solid transparent;font-size:1rem;transition:background .2s,border-color .2s,color .2s}
+  .nav a:not(.btn):hover,.nav a.active{background:var(--bg);border-left-color:var(--accent);color:var(--navy)}
+  .nav.open a{animation:slideIn .4s both}
+  .nav.open a:nth-child(2){animation-delay:.04s}.nav.open a:nth-child(3){animation-delay:.08s}.nav.open a:nth-child(4){animation-delay:.12s}
+  .nav.open a:nth-child(5){animation-delay:.16s}.nav.open a:nth-child(6){animation-delay:.2s}.nav.open a:nth-child(7){animation-delay:.24s}
+  .nav.open a:nth-child(8){animation-delay:.28s}.nav.open a:nth-child(9){animation-delay:.32s}
+  @keyframes slideIn{from{opacity:0;transform:translateX(24px)}}
   .nav a:not(.btn)::after{display:none}
   .nav-cta{margin:18px 0 0;justify-content:center}
   .burger{display:flex;z-index:2}

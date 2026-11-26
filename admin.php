@@ -73,7 +73,7 @@ $today = count(array_filter($rows, fn($r) => str_starts_with($r['created_at'] ??
 <title>Admin | <?= SITE_NAME ?></title>
 <link rel="icon" type="image/png" href="img/favicon.png">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=3">
+<link rel="stylesheet" href="css/style.css?v=4">
 <style>
   body{background:var(--bg)}
   .adm-top{background:var(--navy-dk);color:#fff;padding:14px 0}
