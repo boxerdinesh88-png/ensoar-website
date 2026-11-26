@@ -315,3 +315,27 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
   .cta-inner{padding:40px 28px}
   .range-top input{width:120px}
 }
+
+/* form submit loading state */
+.btn.loading{pointer-events:none;opacity:.85}
+.btn.loading .ic{display:none}
+.btn.loading::before{content:"";width:18px;height:18px;border-radius:50%;border:2.5px solid currentColor;border-right-color:transparent;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* thank-you page */
+.thanks{min-height:100vh;display:grid;place-items:center;padding:60px 0}
+.thanks-logo{height:52px;margin:0 auto 28px}
+.thanks-card{max-width:560px;margin:0 auto;background:#fff;color:var(--ink);border-radius:24px;padding:44px 40px;box-shadow:var(--shadow-lg);animation:fadeUp .6s both}
+.thanks-card h1{color:var(--navy-dk);font-size:clamp(1.6rem,3vw,2.1rem)}
+.thanks-card .lead{color:var(--muted);margin:10px auto 22px;font-size:1rem}
+.tick{width:84px;height:84px;margin:0 auto 18px;display:block}
+.tick circle{fill:none;stroke:#1aa364;stroke-width:3;stroke-dasharray:152;stroke-dashoffset:152;animation:draw .6s ease-out forwards}
+.tick path{fill:none;stroke:#1aa364;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:40;stroke-dashoffset:40;animation:draw .4s .5s ease-out forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.thanks-sum{list-style:none;text-align:left;background:var(--bg);border-radius:14px;padding:6px 18px;margin-bottom:18px}
+.thanks-sum li{display:flex;justify-content:space-between;gap:14px;padding:11px 0;border-bottom:1px solid var(--line);font-size:.94rem}
+.thanks-sum li:last-child{border:0}
+.thanks-sum span{color:var(--muted)}
+.thanks-sum b{color:var(--navy-dk);text-align:right}
+.thanks-card .thanks-next{color:var(--muted);font-size:.94rem;margin-bottom:26px}
+.thanks-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}

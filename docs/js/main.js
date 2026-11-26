@@ -50,6 +50,13 @@
     }));
   });
 
+  // submit: lock the button and show a spinner so nobody double-submits (reset if the user comes back)
+  $$('form[action="submit.php"]').forEach(f => f.addEventListener('submit', () => {
+    const b = $('button[type=submit]', f); b.dataset.label ??= b.innerHTML;
+    b.classList.add('loading'); b.disabled = true; b.firstChild.textContent = 'Submitting… ';
+  }));
+  addEventListener('pageshow', () => $$('button.loading').forEach(b => { b.classList.remove('loading'); b.disabled = false; b.innerHTML = b.dataset.label; }));
+
   // preselect loan type from ?loan= (links on the Loans page)
   const want = new URLSearchParams(location.search).get('loan');
   if (want) $$('select[name=loan] option').forEach(o => { if (o.text === want) o.selected = true; });

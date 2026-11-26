@@ -35,19 +35,31 @@ if ($d['message'] !== '') $lines[] = "Message: {$d['message']}";
 $wa = 'https://wa.me/' . PHONE_RAW . '?text=' . rawurlencode(implode("\n", $lines));
 ?><!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
 <title>Thank you – <?= SITE_NAME ?></title>
-<meta http-equiv="refresh" content="2;url=<?= e($wa) ?>">
-<link rel="icon" href="img/favicon.png"><link rel="stylesheet" href="css/style.css?v=2">
+<link rel="icon" href="img/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css?v=3">
 </head><body>
-<section class="page-hero" style="min-height:100vh;display:grid;place-items:center">
+<section class="page-hero thanks">
   <div class="wrap">
-    <img src="img/logo-white.png" alt="<?= SITE_NAME ?>" style="height:56px;margin:0 auto 30px">
-    <h1>Thank you, <?= e($d['name']) ?>!</h1>
-    <p>Your enquiry is received<?= $mailed ? ' and a confirmation has been emailed to ' . e($d['email']) : '' ?>. Opening WhatsApp so you can also send it to our advisor instantly…</p>
-    <p style="margin-top:30px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap">
-      <a class="btn btn-accent" href="<?= e($wa) ?>">Send on WhatsApp</a>
-      <a class="btn btn-ghost-light" href="index.php">Back to Home</a>
-    </p>
+    <img src="img/logo-white.png" alt="<?= SITE_NAME ?>" class="thanks-logo">
+    <div class="thanks-card">
+      <svg class="tick" viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="24"/><path d="M15 27l7 7 15-15"/></svg>
+      <h1>Thank you, <?= e($d['name']) ?>!</h1>
+      <p class="lead">Your <?= $d['kind'] === 'Partner' ? 'partner registration' : 'loan enquiry' ?> has been submitted successfully.</p>
+      <ul class="thanks-sum">
+        <li><span><?= $d['kind'] === 'Partner' ? 'Partner type' : 'Loan type' ?></span><b><?= e($d['loan']) ?></b></li>
+        <li><span>Mobile</span><b><?= e($d['phone']) ?></b></li>
+        <li><span>City</span><b><?= e($d['city']) ?></b></li>
+        <?php if ($d['amount'] !== ''): ?><li><span>Amount</span><b>₹<?= e($d['amount']) ?></b></li><?php endif; ?>
+      </ul>
+      <p class="thanks-next"><?= $mailed ? 'A confirmation has been sent to <b>' . e($d['email']) . '</b>. ' : '' ?>Our loan advisor will call you within one working day.</p>
+      <div class="thanks-actions">
+        <a class="btn btn-navy" href="index.php">Back to Home</a>
+        <a class="btn btn-outline" href="<?= e($wa) ?>" target="_blank" rel="noopener">Chat on WhatsApp</a>
+      </div>
+    </div>
   </div>
 </section>
 </body></html>
