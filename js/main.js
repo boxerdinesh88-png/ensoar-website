@@ -40,7 +40,8 @@
   // typing rotator in hero
   const rot = $('.rotator');
   if (rot) {
-    const words = JSON.parse(rot.dataset.words); let w = 0, i = 0, del = false;
+    // the first word is already in the HTML (so Google reads a full H1); start by showing it, then rotate
+    const words = JSON.parse(rot.dataset.words); let w = 0, i = rot.textContent === words[0] ? words[0].length : 0, del = false;
     const type = () => {
       const word = words[w]; rot.textContent = word.slice(0, i);
       if (!del && i === word.length) { del = true; return setTimeout(type, 1800); }

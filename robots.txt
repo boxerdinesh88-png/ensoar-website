@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin.php
+Disallow: /submit.php
+
+Sitemap: https://ensoar.in/sitemap.xml

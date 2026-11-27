@@ -1,6 +1,7 @@
 <?php
 $page = 'home';
-$title = 'Ensoar Pvt. Ltd. | Car, Commercial Vehicle & Two-Wheeler Loans in Delhi NCR';
+$title = 'Car Loans in Ghaziabad & Delhi NCR | Ensoar Pvt. Ltd.';
+$desc = 'Ensoar – car loan DSA in Indirapuram, Ghaziabad. New car, used car, commercial vehicle & two-wheeler loans from top banks & NBFCs across Delhi NCR. Free consultation.';
 require 'includes/header.php';
 require 'includes/form.php';
 ?>
@@ -8,8 +9,8 @@ require 'includes/form.php';
   <div class="hero-bg" style="background-image:url('<?= img('1492144534655-ae79c964c9d7', 2400) ?>')"></div>
   <div class="wrap">
     <div>
-      <span class="eyebrow reveal" style="color:var(--accent)">Auto Finance Experts · Delhi NCR</span>
-      <h1 class="reveal">Fast &amp; hassle-free<br><span class="rotator" data-words='["Car Loans","Used Car Loans","Truck Loans","Bike Loans","Loan Against Car"]'></span><br>from top lenders</h1>
+      <span class="eyebrow reveal" style="color:var(--accent)">Auto Finance Experts · Ghaziabad &amp; Delhi NCR</span>
+      <h1 class="reveal">Fast &amp; hassle-free<br><span class="rotator" data-words='["Car Loans","Used Car Loans","Truck Loans","Bike Loans","Loan Against Car"]'>Car Loans</span><br>in Ghaziabad &amp; Delhi NCR</h1>
       <p class="lead reveal">Ensoar compares offers from leading banks &amp; NBFCs and gets your vehicle loan sanctioned at the best possible rate — with doorstep documentation and zero consultation fee.</p>
       <div class="hero-actions reveal">
         <a href="contact.php#apply" class="btn btn-accent">Apply Now <?= icon('arrow') ?></a>

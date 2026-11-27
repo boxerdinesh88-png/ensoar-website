@@ -27,7 +27,7 @@ function img(string $id, int $w = 1600): string {
 function page_hero(string $h1, string $sub, string $photo, string $crumb): void {
     echo '<section class="page-hero"><div class="hero-bg" style="background-image:url(\'' . img($photo, 2000) . '\')"></div><div class="wrap">'
        . '<h1 class="reveal">' . $h1 . '</h1><p class="reveal">' . $sub . '</p>'
-       . '<nav class="crumbs reveal" aria-label="Breadcrumb"><a href="index.php">Home</a> / <span>' . $crumb . '</span></nav></div></section>';
+       . '<nav class="crumbs reveal" aria-label="Breadcrumb"><a href="./">Home</a> / <span>' . $crumb . '</span></nav></div></section>';
 }
 
 function e(string $s): string { return htmlspecialchars($s, ENT_QUOTES, 'UTF-8'); }

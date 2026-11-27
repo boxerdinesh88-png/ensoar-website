@@ -56,7 +56,7 @@ $wa = 'https://wa.me/' . PHONE_RAW . '?text=' . rawurlencode(implode("\n", $line
       </ul>
       <p class="thanks-next"><?= $mailed ? 'A confirmation has been sent to <b>' . e($d['email']) . '</b>. ' : '' ?>Our loan advisor will call you within one working day.</p>
       <div class="thanks-actions">
-        <a class="btn btn-navy" href="index.php">Back to Home</a>
+        <a class="btn btn-navy" href="./">Back to Home</a>
         <a class="btn btn-outline" href="<?= e($wa) ?>" target="_blank" rel="noopener">Chat on WhatsApp</a>
       </div>
     </div>
